@@ -115,3 +115,28 @@ def plot_roc_auc(labels, pred):
     ax.set_ylabel('True Positive Rate')
     ax.set_title('Receiver operating characteristic')
     ax.legend()
+    
+    
+    
+def gen_dist(rdfile):
+    #Given a path, build a 2d array
+    dist = []
+    x = rdfile[:,0]
+    #The second columns needs to be retyped to satisfy range()
+    y = list(map(int,rdfile[:,1]))
+    #This iterates over each bin (1st col) and appends it's value
+    #to the list per value in the 2nd col
+    #Some bins added many times others not at all if y[i] == 0
+    #This will create the full distribution, ready to be randomly
+    #sampled from
+    for i in range(len(x)):
+        for j in range(y[i]):
+            dist.append(x[i])
+    return dist
+
+def noise_gen(rdfile):
+    dist = np.asarray(gen_dist(rdfile))
+    #This generates a flat array of numbers randomly sampled from the distribution
+    random_noise = np.asarray([np.random.choice(dist) for i in range(0,16**2)])
+    return random_noise
+
